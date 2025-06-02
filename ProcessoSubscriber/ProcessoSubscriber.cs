@@ -22,6 +22,7 @@ namespace SubscriberProcesso
         // maximo de tentativas
         private const int maxTentativas = 5;
 
+        // injetando o repositório
         public ProcessoSubscriber(IProcessoRepository processoRepository)
         {
             _processoRepository = processoRepository;
@@ -37,13 +38,14 @@ namespace SubscriberProcesso
             using var connection = factory.CreateConnection();
             using var channel = connection.CreateModel();
 
+            // exchange do tipo direct
             channel.ExchangeDeclare(exchange: ExchangeName, type: ExchangeType.Direct, durable: true);
 
             // declarando a fila DLQ
             channel.QueueDeclare(queue: DlqQueueName, durable: true, exclusive: false, autoDelete: false, arguments: null);
             channel.QueueBind(queue: DlqQueueName, exchange: ExchangeName, routingKey: DlqQueueName);
 
-            // fila principal com DLQ para retry
+            // fila principal com DLQ para a de retry
             var queueArgs = new Dictionary<string, object>
             {
                 { "x-dead-letter-exchange", ExchangeName },
@@ -64,6 +66,7 @@ namespace SubscriberProcesso
 
             Console.WriteLine("[ProcessoSubscriber] Aguardando mensagens...");
 
+            // consumidor das mensagens
             var consumer = new EventingBasicConsumer(channel);
             consumer.Received += async (model, ea) =>
             {
@@ -71,19 +74,21 @@ namespace SubscriberProcesso
                 var mensagem = Encoding.UTF8.GetString(body);
                 Console.WriteLine($"[ProcessoSubscriber] Mensagem recebida: {mensagem}");
 
+                // contador de tentativas
                 int retryCount = 0;
+                // le o cabeçalho
                 if (ea.BasicProperties.Headers != null && ea.BasicProperties.Headers.TryGetValue("x-retry-count", out var retryHeader))
                 {
-                    if (retryHeader is byte[] retryBytes)
+                    if (retryHeader is byte[] retryBytes) // converte pra string e depois inteiro
                     {
                         var retryStr = Encoding.UTF8.GetString(retryBytes);
                         int.TryParse(retryStr, out retryCount);
                     }
-                    else if (retryHeader is int retryInt)
+                    else if (retryHeader is int retryInt) // inteiro
                     {
                         retryCount = retryInt;
                     }
-                    else if (retryHeader is long retryLong)
+                    else if (retryHeader is long retryLong) // long pra int
                     {
                         retryCount = (int)retryLong;
                     }
@@ -99,6 +104,7 @@ namespace SubscriberProcesso
                         return;
                     }
 
+                    // aguarda pelo registro da inscrição no repositório
                     await _processoRepository.RegistrarProcessoSeletivo(processo);
                     Console.WriteLine($"[ProcessoSubscriber] Processo seletivo '{processo.Nome}' registrado com sucesso.");
                     channel.BasicAck(ea.DeliveryTag, false);
@@ -112,6 +118,7 @@ namespace SubscriberProcesso
                     {
                         Console.WriteLine("[ProcessoSubscriber] O máximo de tentativas foi atingido. Sua mensagem será descartada, sinto muito :(");
 
+                        // envia pra DLQ
                         var propsDlq = channel.CreateBasicProperties();
                         propsDlq.Persistent = true;
                         propsDlq.Headers = ea.BasicProperties.Headers ?? new Dictionary<string, object>();
@@ -127,6 +134,7 @@ namespace SubscriberProcesso
                         return;
                     }
 
+                    // envia ou reenvia para a de retyr, mandando o contador
                     var props = channel.CreateBasicProperties();
                     props.Persistent = true;
                     props.Headers ??= new Dictionary<string, object>();
@@ -144,6 +152,7 @@ namespace SubscriberProcesso
                 }
             };
 
+            // consome a fila com controle manual de confirmação
             channel.BasicConsume(queue: QueueName, autoAck: false, consumer: consumer);
             Console.WriteLine("Aguardando mensagens na fila processo_cadastro. Pressione ENTER para sair.");
             Console.ReadLine();

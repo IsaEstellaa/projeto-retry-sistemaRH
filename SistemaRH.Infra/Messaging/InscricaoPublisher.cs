@@ -11,9 +11,12 @@ namespace SistemaRH.Infra.Messaging
 {
     public class InscricaoPublisher
     {
+        // exchange onde as mensagens serão publicadas
         private const string ExchangeName = "exchange-sistema-rh";
+        // routing key usada para direcionar a mensagem para a fila correta
         private const string RoutingKey = "inscricao_cadastro";
 
+        // publica a mensagem
         public void Publicar(Inscricao inscricao)
         {
             var factory = new ConnectionFactory()
@@ -24,12 +27,14 @@ namespace SistemaRH.Infra.Messaging
             using var connection = factory.CreateConnection();
             using var channel = connection.CreateModel();
 
-            // Declara a exchange
+            // declara a exchange
             channel.ExchangeDeclare(exchange: ExchangeName, type: ExchangeType.Direct, durable: true);
 
+            // serializa para json e converte para array
             var mensagem = JsonSerializer.Serialize(inscricao);
             var body = Encoding.UTF8.GetBytes(mensagem);
 
+            // publica na exchange com o caminho correto
             channel.BasicPublish(
                 exchange: ExchangeName,
                 routingKey: RoutingKey,

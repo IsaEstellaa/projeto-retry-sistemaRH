@@ -14,9 +14,10 @@ namespace SistemaRH.Infra
         {
             var optionsBuilder = new DbContextOptionsBuilder<SqlContext>();
 
-            // Alterando para SQL Server (LocalDB)
+            // define a string de conexão para o SQL Server
             optionsBuilder.UseSqlServer("Server=(localdb)\\MSSQLLocalDB;Database=SistemaRH;Trusted_Connection=True;");
 
+            // retorna uma nova instância de SqlContext com as opções configuradas
             return new SqlContext(optionsBuilder.Options);
         }
     }

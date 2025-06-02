@@ -22,6 +22,7 @@ namespace SubscriberVaga
         // maximo de tentativas
         private const int maxTentativas = 5;
 
+        // injetando o repositório
         public VagaSubscriber(IVagaRepository vagaRepository)
         {
             _vagaRepository = vagaRepository;
@@ -37,6 +38,7 @@ namespace SubscriberVaga
             using var connection = factory.CreateConnection();
             using var channel = connection.CreateModel();
 
+            // exchange do tipo direct
             channel.ExchangeDeclare(exchange: ExchangeName, type: ExchangeType.Direct, durable: true);
 
             // declarando a fila DLQ
@@ -55,15 +57,16 @@ namespace SubscriberVaga
             // declarando a fila de retry, com TTL e dead letter para a fila principal
             var retryQueueArgs = new System.Collections.Generic.Dictionary<string, object>
             {
-                { "x-message-ttl", 5000 },                     // aguarda 5000ms antes de reentrar na fila principal
-                { "x-dead-letter-exchange", ExchangeName },    // dead letter para a exchange principal
-                { "x-dead-letter-routing-key", RoutingKey }    // reenvia para fila principal
+                { "x-message-ttl", 5000 },                     // espera 5 segundos
+                { "x-dead-letter-exchange", ExchangeName },
+                { "x-dead-letter-routing-key", RoutingKey }
             };
             channel.QueueDeclare(queue: RetryQueueName, durable: true, exclusive: false, autoDelete: false, arguments: retryQueueArgs);
             channel.QueueBind(queue: RetryQueueName, exchange: ExchangeName, routingKey: RetryQueueName);
 
             Console.WriteLine("[VagaSubscriber] Aguardando mensagens...");
 
+            // consumidor das mensagens
             var consumer = new EventingBasicConsumer(channel);
             consumer.Received += async (model, ea) =>
             {
@@ -72,19 +75,21 @@ namespace SubscriberVaga
 
                 Console.WriteLine($"[VagaSubscriber] Mensagem recebida: {mensagem}");
 
-                int retryCount = 0; // define como 0 o número de tentativas
+                // contador de tentativas
+                int retryCount = 0;
+                // le o cabeçalho
                 if (ea.BasicProperties.Headers != null && ea.BasicProperties.Headers.TryGetValue("x-retry-count", out var retryHeader))
                 {
-                    if (retryHeader is byte[] retryBytes)
+                    if (retryHeader is byte[] retryBytes) // converte pra string e depois inteiro
                     {
                         var retryStr = Encoding.UTF8.GetString(retryBytes);
                         int.TryParse(retryStr, out retryCount);
                     }
-                    else if (retryHeader is int retryInt)
+                    else if (retryHeader is int retryInt) // inteiro
                     {
                         retryCount = retryInt;
                     }
-                    else if (retryHeader is long retryLong)
+                    else if (retryHeader is long retryLong) // long pra int
                     {
                         retryCount = (int)retryLong;
                     }
@@ -97,11 +102,12 @@ namespace SubscriberVaga
                     if (vaga == null)
                     {
                         Console.WriteLine("[VagaSubscriber] Mensagem inválida.");
-                        // ACK - Acknowledgment, foi processada, mas n vou enviar pra fila nenhuma
+                        // ACK - acknowledgment, foi processada, mas n vou enviar pra fila nenhuma
                         channel.BasicAck(ea.DeliveryTag, false); // remove da fila
                         return;
                     }
 
+                    // aguarda pelo registro da vaga no repositório
                     await _vagaRepository.RegistrarVaga(vaga);
                     Console.WriteLine($"[VagaSubscriber] Vaga '{vaga.Titulo}' registrada com sucesso.");
                     channel.BasicAck(ea.DeliveryTag, false); // deu bom, confirma a mensagem
@@ -153,6 +159,7 @@ namespace SubscriberVaga
                 }
             };
 
+            // consome a fila com controle manual de confirmação
             channel.BasicConsume(queue: QueueName, autoAck: false, consumer: consumer);
             Console.WriteLine("Aguardando mensagens na fila vaga_cadastro. Pressione ENTER para sair.");
             Console.ReadLine();

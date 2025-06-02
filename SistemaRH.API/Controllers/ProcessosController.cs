@@ -10,6 +10,7 @@ using SistemaRH.Infra.Messaging;
 [Route("api/processos")]
 public class ProcessosController : ControllerBase
 {
+    // chamada de todos os repositórios utilizados
     private readonly IProcessoRepository _processoRepository;
     private readonly ProcessoPublisher _processoPublisher;
 
@@ -28,6 +29,7 @@ public class ProcessosController : ControllerBase
             return BadRequest("Os dados do processo seletivo são inválidos.");
         }
 
+        // chamada do publisher de processo
         _processoPublisher.Publicar(processo);
         return Accepted("Processo Seletivo enviado para processamento.");
 
@@ -44,10 +46,10 @@ public class ProcessosController : ControllerBase
 
         if (processo == null)
         {
-            return NotFound($"Processo seletivo com ID {id} não encontrado."); // 404 Not Found
+            return NotFound($"Processo seletivo com ID {id} não encontrado.");
         }
 
-        return Ok(processo); // 200 OK
+        return Ok(processo);
     }
 
 
@@ -56,15 +58,15 @@ public class ProcessosController : ControllerBase
     public async Task<IActionResult> ObterTodosProcessos()
     {
         var processos = await _processoRepository.ObterTodosProcessos();
-        return Ok(processos); // 200 OK
+        return Ok(processos);
     }
 
 
-    // Atualizar um processo seletivo
+    // Atualizar um processo seletivo existente
     [HttpPut("{id}", Name = "Atualizar_um_processo_seletivo")]
     public async Task<IActionResult> AtualizarProcessoSeletivo(int id, [FromBody] ProcessoSeletivo processo)
     {
-        // é válido?
+        
         if (processo == null)
         {
             return BadRequest("Os dados enviados são inválidos.");
@@ -77,15 +79,16 @@ public class ProcessosController : ControllerBase
             return NotFound($"O processo seletivo com o ID {id} não foi encontrado.");
         }
 
-        // atualizando
+        // atualizando os campos existentes
         processoExistente.Nome = processo.Nome;
         if (processo.DataInicio.HasValue)
             processoExistente.DataInicio = processo.DataInicio;
         if (processo.DataFim.HasValue)
             processoExistente.DataFim = processo.DataFim;
 
+        // salva as alterações no banco de dados
         await _processoRepository.AtualizarProcessoSeletivo(processoExistente);
-        return NoContent(); // 204 - foi bem-sucedido
+        return NoContent();
     }
 
 
@@ -100,7 +103,7 @@ public class ProcessosController : ControllerBase
         }
 
         await _processoRepository.ExcluirProcessoSeletivo(id);
-        return NoContent(); // 204 No Content (indica que foi bem-sucedido, mas sem conteúdo para retornar)
+        return NoContent();
     }
 
 

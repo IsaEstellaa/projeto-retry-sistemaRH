@@ -11,7 +11,9 @@ public class Inscricao
     public string? EmailCandidato { get; set; }
     public DateTime? DataNasc { get; set; }
 
+    // vagas que esta participando
     public List<Vaga> VagasParticipando { get; set; } = new();
+    // processos que está participando
     public List<ProcessoSeletivo> ProcessosParticipando { get; set; } = new();
 
 }

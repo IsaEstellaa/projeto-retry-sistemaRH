@@ -19,7 +19,7 @@ namespace SistemaRH.Infra.Repositories
             _context = context;
         }
 
-        // Registrar a inscrição do candidato
+        // registra a inscrição do candidato
         public async Task RegistrarInscricao(Inscricao inscricao)
         {
             try
@@ -31,30 +31,29 @@ namespace SistemaRH.Infra.Repositories
             }
             catch (Exception ex)
             {
-                // Log de erro pode ser adicionado aqui
                 throw new Exception("Erro ao registrar a inscrição", ex);
             }
         }
 
-        // Obter uma inscrição por ID
+        // obtem uma inscrição por ID
         public async Task<Inscricao> ObterInscricaoPorId(Guid id)
+        {
+            return await _context.Inscricoes
+                .Include(i => i.VagasParticipando)       // vagas relacionadas
+                .Include(i => i.ProcessosParticipando)   // processos seletivos relacionados
+                .FirstOrDefaultAsync(i => i.Id == id);
+        }
+
+        // obtem todas as inscrições
+        public async Task<List<Inscricao>> ObterTodasInscricoes()
         {
             return await _context.Inscricoes
                 .Include(i => i.VagasParticipando)
                 .Include(i => i.ProcessosParticipando)
-                .FirstOrDefaultAsync(i => i.Id == id);
-        }
-
-        // Obter todas as inscrições
-        public async Task<List<Inscricao>> ObterTodasInscricoes()
-        {
-            return await _context.Inscricoes
-                .Include(i => i.VagasParticipando)       // Carrega as vagas relacionadas
-                .Include(i => i.ProcessosParticipando)   // Carrega os processos seletivos relacionados
                 .ToListAsync();
         }
 
-        // Atualizar uma inscrição
+        // atualiza uma inscrição existente
         public async Task AtualizarInscricao(Inscricao inscricao)
         {
             try
@@ -66,12 +65,11 @@ namespace SistemaRH.Infra.Repositories
             }
             catch (Exception ex)
             {
-                // Log de erro pode ser adicionado aqui
                 throw new Exception("Erro ao atualizar inscrição", ex);
             }
         }
 
-        // Excluir uma inscrição
+        // exclui uma inscrição
         public async Task ExcluirInscricao(Guid id)
         {
             try
@@ -87,13 +85,12 @@ namespace SistemaRH.Infra.Repositories
             }
             catch (Exception ex)
             {
-                // Log de erro pode ser adicionado aqui
                 throw new Exception("Erro ao excluir inscrição", ex);
             }
         }
 
 
-        // Implementação para vincular vaga à inscrição
+        // vincular vaga a uma inscrição
         public async Task VincularVaga(Guid inscricaoId, Vaga vaga)
         {
             var inscricao = await ObterInscricaoPorId(inscricaoId);
@@ -109,7 +106,7 @@ namespace SistemaRH.Infra.Repositories
         }
 
 
-        // Implementação para vincular processo seletivo à inscrição
+        // vincular processo seletivo à inscrição
         public async Task VincularProcesso(Guid inscricaoId, ProcessoSeletivo processo)
         {
             var inscricao = await ObterInscricaoPorId(inscricaoId);

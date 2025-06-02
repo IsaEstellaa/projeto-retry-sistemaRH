@@ -11,6 +11,7 @@ using SistemaRH.Infra.Messaging;
 [Route("api/vagas")]
 public class VagasController : ControllerBase
 {
+    // chamada de todos os repositórios utilizados
     private readonly IVagaRepository _vagaRepository;
     private readonly VagaPublisher _vagaPublisher;
 
@@ -24,6 +25,7 @@ public class VagasController : ControllerBase
     [HttpPost(Name = "Registrar_vaga_de_emprego")]
     public async Task<IActionResult> RegistrarVaga([FromBody] Vaga vaga)
     {
+        // chamada do publisher de vaga
         _vagaPublisher.Publicar(vaga);
 
         return Accepted("Vaga enviada para processamento.");
@@ -50,7 +52,7 @@ public class VagasController : ControllerBase
     public async Task<IActionResult> ObterTodasVagas()
     {
         var vagas = await _vagaRepository.ObterTodasVagas();
-        return Ok(vagas);  // Retorna 200 com a lista de vagas
+        return Ok(vagas);
     }
 
 
@@ -59,13 +61,13 @@ public class VagasController : ControllerBase
     public async Task<IActionResult> AtualizarVaga(Guid id, [FromBody] Vaga vaga)
     {
  
-        var vagaExistente = await _vagaRepository.ObterVagaPorId(id);  // esperando verificar se ja nao existe
+        var vagaExistente = await _vagaRepository.ObterVagaPorId(id);
         if (vagaExistente == null)
         {
             return NotFound("Vaga não encontrada.");
         }
 
-        // atualiza os campos
+        // atualiza os campos existentes
         vagaExistente.Titulo = vaga.Titulo; // obrigatório
         if (!string.IsNullOrEmpty(vaga.Descricao))
             vagaExistente.Descricao = vaga.Descricao;
@@ -75,9 +77,9 @@ public class VagasController : ControllerBase
         vagaExistente.DataPublicacao = vaga.DataPublicacao; // obrigatório
         vagaExistente.Salario = vaga.Salario;
 
-        // Manda as alterações para o repository
-        await _vagaRepository.AtualizarVaga(vagaExistente);  // Método que atualiza a vaga
-        return Ok(vagaExistente);  // Retorna a vaga atualizada
+        // salva as alterações no banco de dados
+        await _vagaRepository.AtualizarVaga(vagaExistente);
+        return Ok(vagaExistente);
     }
 
     // Excluir uma vaga
@@ -87,11 +89,11 @@ public class VagasController : ControllerBase
         var vaga = await _vagaRepository.ObterVagaPorId(id);
         if (vaga == null)
         {
-            return NotFound("Vaga não encontrada.");  // Retorna 404 se a vaga não for encontrada
+            return NotFound("Vaga não encontrada.");
         }
 
         await _vagaRepository.ExcluirVaga(id);
-        return NoContent();  // Retorna 204 se a exclusão for bem-sucedida
+        return NoContent();
     }
 
 
@@ -99,7 +101,6 @@ public class VagasController : ControllerBase
     [HttpGet("simulate-500", Name = "Simular_erro_na_vaga")]
     public IActionResult SimulateError500()
     {
-        // Simulando erro no processo
         throw new Exception("Um erro aconteceu durante a inclusão da Vaga! :(");
     }
 }

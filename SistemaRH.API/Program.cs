@@ -12,30 +12,33 @@ namespace SistemaRH.API
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Registrar o DbContext no container de dependências
+            // registrar o DbContext no container de dependencias
             builder.Services.AddDbContext<SqlContext>(options =>
                 options.UseSqlServer("Server=(localdb)\\MSSQLLocalDB;Database=SistemaRH;Trusted_Connection=True;")
 );
 
+            // registra os repositÃ³rios para serem injetados nas classes que os consomem
             builder.Services.AddScoped<IInscricaoRepository, InscricaoRepository>();
             builder.Services.AddScoped<IProcessoRepository, ProcessoRepository>();
             builder.Services.AddScoped<IVagaRepository, VagaRepository>();
+            // registro dos publishers
             builder.Services.AddScoped<VagaPublisher>();
             builder.Services.AddScoped<ProcessoPublisher>();
             builder.Services.AddScoped<InscricaoPublisher>();
 
+            // controllers de api e opcoes de serializaÃ§Ã£o
             builder.Services.AddControllers()
                             .AddJsonOptions(options =>
                             {
                                 options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve;
-                                options.JsonSerializerOptions.MaxDepth = 64; // ou o valor que desejar
+                                options.JsonSerializerOptions.MaxDepth = 64;
                             });
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
             var app = builder.Build();
 
-            // Configuração do Swagger
+            // configuracao do Swagger
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();

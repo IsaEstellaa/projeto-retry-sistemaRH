@@ -13,19 +13,26 @@ namespace SubscriberInscricao
     {
         private readonly IInscricaoRepository _inscricaoRepository;
 
+        // usada para roteamento das mensagens
         private const string ExchangeName = "exchange-sistema-rh";
+        // fila principal
         private const string QueueName = "inscricao_cadastro";
+        // fila de retyr
         private const string RetryQueueName = "inscricao_cadastro_retry";
+        // fila quando passa do num de tentativas
         private const string DlqQueueName = "inscricao_cadastro_dlq";
+        // chave de vinculação para exchange
         private const string RoutingKey = "inscricao_cadastro";
 
         private const int maxTentativas = 5;
 
+        // injetando o repositório
         public InscricaoSubscriber(IInscricaoRepository inscricaoRepository)
         {
             _inscricaoRepository = inscricaoRepository;
         }
 
+        // função que é chamada no program
         public void EscutarFila()
         {
             var factory = new ConnectionFactory()
@@ -36,13 +43,14 @@ namespace SubscriberInscricao
             using var connection = factory.CreateConnection();
             using var channel = connection.CreateModel();
 
+            // exchange do tipo direct
             channel.ExchangeDeclare(exchange: ExchangeName, type: ExchangeType.Direct, durable: true);
 
-            // DLQ
+            // fila de DLQ
             channel.QueueDeclare(queue: DlqQueueName, durable: true, exclusive: false, autoDelete: false, arguments: null);
             channel.QueueBind(queue: DlqQueueName, exchange: ExchangeName, routingKey: DlqQueueName);
 
-            // Fila principal com DLQ para retry
+            // declara a fila principal com DLQ configurada para enviar para a de retry
             var mainQueueArgs = new Dictionary<string, object>
             {
                 { "x-dead-letter-exchange", ExchangeName },
@@ -51,7 +59,7 @@ namespace SubscriberInscricao
             channel.QueueDeclare(queue: QueueName, durable: true, exclusive: false, autoDelete: false, arguments: mainQueueArgs);
             channel.QueueBind(queue: QueueName, exchange: ExchangeName, routingKey: RoutingKey);
 
-            // Fila de retry com TTL e DLQ de volta pra principal
+            // fila de retry com TTL e DLQ de volta pra principal
             var retryQueueArgs = new Dictionary<string, object>
             {
                 { "x-message-ttl", 5000 },
@@ -63,6 +71,7 @@ namespace SubscriberInscricao
 
             Console.WriteLine("[InscricaoSubscriber] Aguardando mensagens...");
 
+            // consumidor das mensagens
             var consumer = new EventingBasicConsumer(channel);
             consumer.Received += async (model, ea) =>
             {
@@ -70,6 +79,7 @@ namespace SubscriberInscricao
                 var mensagem = Encoding.UTF8.GetString(body);
                 Console.WriteLine($"[InscricaoSubscriber] Mensagem recebida: {mensagem}");
 
+                // contador de tentativas
                 int retryCount = 0;
                 if (ea.BasicProperties.Headers != null && ea.BasicProperties.Headers.TryGetValue("x-retry-count", out var retryHeader))
                 {
@@ -98,6 +108,7 @@ namespace SubscriberInscricao
                         return;
                     }
 
+                    // aguarda pelo registro da inscrição no repositório
                     await _inscricaoRepository.RegistrarInscricao(inscricao);
                     Console.WriteLine($"[InscricaoSubscriber] A inscrição de '{inscricao.NomeCandidato}' foi registrada com sucesso!");
                     channel.BasicAck(ea.DeliveryTag, false);
@@ -111,6 +122,7 @@ namespace SubscriberInscricao
                     {
                         Console.WriteLine("[InscricaoSubscriber] O máximo de tentativas foi atingido. A mensagem será descartada.");
 
+                        // envia pra DLQ
                         var propsDlq = channel.CreateBasicProperties();
                         propsDlq.Persistent = true;
                         propsDlq.Headers = ea.BasicProperties.Headers ?? new Dictionary<string, object>();
@@ -126,6 +138,7 @@ namespace SubscriberInscricao
                         return;
                     }
 
+                    // envia ou reenvia para a de retyr, mandando o contador
                     var props = channel.CreateBasicProperties();
                     props.Persistent = true;
                     props.Headers ??= new Dictionary<string, object>();
@@ -143,6 +156,7 @@ namespace SubscriberInscricao
                 }
             };
 
+            // consome a fila com controle manual de confirmação
             channel.BasicConsume(queue: QueueName, autoAck: false, consumer: consumer);
             Console.WriteLine("Aguardando mensagens na fila inscricao_cadastro. Pressione ENTER para sair.");
             Console.ReadLine();

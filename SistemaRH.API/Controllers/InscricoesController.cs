@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 [Route("api/inscricoes")]
 public class InscricoesController : ControllerBase
 {
+    // chamada de todos os repositórios utilizados
     private readonly IInscricaoRepository _inscricaoRepository;
     private readonly IVagaRepository _vagaRepository;
     private readonly IProcessoRepository _processoRepository;
@@ -36,6 +37,7 @@ public class InscricoesController : ControllerBase
             return BadRequest("Dados da inscrição são inválidos.");
         }
 
+        // chamada do publisher de inscricao
         _inscricaoPublisher.Publicar(inscricao);
         return Accepted("Processo Seletivo enviado para processamento.");
 
@@ -47,22 +49,22 @@ public class InscricoesController : ControllerBase
     [HttpGet("{id}", Name = "Obter_inscricao_de_candidato_por_ID")]
     public async Task<IActionResult> ObterInscricaoPorId(Guid id)
     {
-        var inscricao = await _inscricaoRepository.ObterInscricaoPorId(id); // Supondo que você tenha esse método no repositório
+        var inscricao = await _inscricaoRepository.ObterInscricaoPorId(id);
 
         if (inscricao == null)
         {
-            return NotFound($"Inscrição com ID {id} não encontrada."); // 404 Not Found
+            return NotFound($"Inscrição com ID {id} não encontrada.");
         }
 
-        return Ok(inscricao); // 200 OK
+        return Ok(inscricao);
     }
 
     // Obter todas as inscrições
     [HttpGet(Name = "Obter_todas_as_inscricoes_de_candidato")]
     public async Task<IActionResult> ObterTodasInscricoes()
     {
-        var inscricoes = await _inscricaoRepository.ObterTodasInscricoes(); // Supondo que você tenha esse método no repositório
-        return Ok(inscricoes); // 200 OK
+        var inscricoes = await _inscricaoRepository.ObterTodasInscricoes();
+        return Ok(inscricoes);
     }
 
     // Atualizar uma inscrição existente
@@ -75,14 +77,14 @@ public class InscricoesController : ControllerBase
             return NotFound("Inscrição não encontrada.");
         }
 
-        // Atualiza os campos
+        // atualiza os campos existentes
         inscricaoExistente.NomeCandidato = inscricao.NomeCandidato;
         if (!string.IsNullOrEmpty(inscricao.EmailCandidato))
             inscricaoExistente.EmailCandidato = inscricao.EmailCandidato;
         if (inscricao.DataNasc.HasValue)
             inscricaoExistente.DataNasc = inscricao.DataNasc.Value;
 
-        // Salva as alterações no banco de dados (passa a entidade já existente)
+        // salva as alterações no banco de dados
         await _inscricaoRepository.AtualizarInscricao(inscricaoExistente);
 
         return Ok(inscricaoExistente);
@@ -100,8 +102,8 @@ public class InscricoesController : ControllerBase
                 return NotFound($"Inscrição com ID {id} não encontrada.");
             }
 
-            await _inscricaoRepository.ExcluirInscricao(id); // Supondo que você tenha esse método no repositório
-            return NoContent(); // 204 No Content
+            await _inscricaoRepository.ExcluirInscricao(id);
+            return NoContent();
         }
         catch (Exception ex)
         {
@@ -109,7 +111,7 @@ public class InscricoesController : ControllerBase
         }
     }
 
-    // Simulando um erro para testar o Status 500 (erro interno)
+    // Simulando um erro para testar o status 500 (erro interno)
     [HttpGet("simulate-500", Name = "Simular_erro_na_inscricao_de_candidato")]
     public IActionResult SimularErroInscricao()
     {
@@ -117,7 +119,7 @@ public class InscricoesController : ControllerBase
     }
 
 
-    // VINCULAR UMA VAGA
+    // Vinculando uma vaga a uma inscricao
     [HttpPost("{inscricaoId}/vagas/{vagaId}", Name = "Cadastrar_candidato_a_uma_vaga")]
     public async Task<IActionResult> VincularVaga(Guid inscricaoId, Guid vagaId)
     {
@@ -145,8 +147,7 @@ public class InscricoesController : ControllerBase
     }
 
 
-    // VINCULAR PROCESSOS
-
+    // Vinculando um processo a uma inscricao
     [HttpPost("{inscricaoId}/processos/{processoId}", Name = "Cadastrar_candidato_a_um_processo_seletivo")]
     public async Task<IActionResult> VincularProcesso(Guid inscricaoId, int processoId)
     {
@@ -165,7 +166,7 @@ public class InscricoesController : ControllerBase
         }
         catch (InvalidOperationException ex)
         {
-            return BadRequest(ex.Message);  // Processo já vinculado
+            return BadRequest(ex.Message);
         }
         catch (Exception ex)
         {

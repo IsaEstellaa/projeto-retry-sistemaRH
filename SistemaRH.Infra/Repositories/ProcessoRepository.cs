@@ -18,7 +18,7 @@ namespace SistemaRH.Infra.Repositories
             _context = context;
         }
 
-        // Registrar um novo processo seletivo
+        // registra um novo processo seletivo
         public async Task RegistrarProcessoSeletivo(ProcessoSeletivo processo)
         {
             try
@@ -30,12 +30,11 @@ namespace SistemaRH.Infra.Repositories
             }
             catch (Exception ex)
             {
-                // Log de erro pode ser adicionado aqui
                 throw new Exception("Erro ao registrar o processo seletivo", ex);
             }
         }
 
-        // Obter um processo seletivo por ID
+        // obtem um processo seletivo por ID
         public async Task<ProcessoSeletivo?> ObterProcessoSeletivoPorId(int id)
         {
             try
@@ -46,12 +45,11 @@ namespace SistemaRH.Infra.Repositories
             }
             catch (Exception ex)
             {
-                // Log de erro pode ser adicionado aqui
                 throw new Exception("Erro ao obter o processo seletivo", ex);
             }
         }
 
-        // Obter todos os processos seletivos
+        // obtem todos os processos seletivos
         public async Task<List<ProcessoSeletivo>> ObterTodosProcessos()
         {
             try
@@ -61,12 +59,11 @@ namespace SistemaRH.Infra.Repositories
             }
             catch (Exception ex)
             {
-                // Log de erro pode ser adicionado aqui
                 throw new Exception("Erro ao obter processos seletivos", ex);
             }
         }
 
-        // Atualizar um processo seletivo existente
+        // atualiza um processo seletivo existente
         public async Task AtualizarProcessoSeletivo(ProcessoSeletivo processo)
         {
             try
@@ -78,12 +75,11 @@ namespace SistemaRH.Infra.Repositories
             }
             catch (Exception ex)
             {
-                // Log de erro pode ser adicionado aqui
                 throw new Exception("Erro ao atualizar o processo seletivo", ex);
             }
         }
 
-        // Excluir um processo seletivo pelo ID
+        // exclui um processo seletivo pelo ID
         public async Task ExcluirProcessoSeletivo(int id)
         {
             try
@@ -99,7 +95,6 @@ namespace SistemaRH.Infra.Repositories
             }
             catch (Exception ex)
             {
-                // Log de erro pode ser adicionado aqui
                 throw new Exception("Erro ao excluir o processo seletivo", ex);
             }
         }

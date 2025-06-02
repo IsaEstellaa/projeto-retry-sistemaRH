@@ -1,0 +1,17 @@
+C:\Users\Aula\Desktop\SistemaRH\SistemaRH\SistemaRH.Publisher\obj\Debug\net8.0\SistemaRH.Publisher.csproj.AssemblyReference.cache
+C:\Users\Aula\Desktop\SistemaRH\SistemaRH\SistemaRH.Publisher\obj\Debug\net8.0\SistemaRH.Publisher.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Aula\Desktop\SistemaRH\SistemaRH\SistemaRH.Publisher\obj\Debug\net8.0\SistemaRH.Publisher.AssemblyInfoInputs.cache
+C:\Users\Aula\Desktop\SistemaRH\SistemaRH\SistemaRH.Publisher\obj\Debug\net8.0\SistemaRH.Publisher.AssemblyInfo.cs
+C:\Users\Aula\Desktop\SistemaRH\SistemaRH\SistemaRH.Publisher\obj\Debug\net8.0\SistemaRH.Publisher.csproj.CoreCompileInputs.cache
+C:\Users\Aula\Desktop\SistemaRH\SistemaRH\SistemaRH.Publisher\bin\Debug\net8.0\SistemaRH.Publisher.exe
+C:\Users\Aula\Desktop\SistemaRH\SistemaRH\SistemaRH.Publisher\bin\Debug\net8.0\SistemaRH.Publisher.deps.json
+C:\Users\Aula\Desktop\SistemaRH\SistemaRH\SistemaRH.Publisher\bin\Debug\net8.0\SistemaRH.Publisher.runtimeconfig.json
+C:\Users\Aula\Desktop\SistemaRH\SistemaRH\SistemaRH.Publisher\bin\Debug\net8.0\SistemaRH.Publisher.dll
+C:\Users\Aula\Desktop\SistemaRH\SistemaRH\SistemaRH.Publisher\bin\Debug\net8.0\SistemaRH.Publisher.pdb
+C:\Users\Aula\Desktop\SistemaRH\SistemaRH\SistemaRH.Publisher\bin\Debug\net8.0\RabbitMQ.Client.dll
+C:\Users\Aula\Desktop\SistemaRH\SistemaRH\SistemaRH.Publisher\obj\Debug\net8.0\SistemaRH.Publisher.csproj.CopyComplete
+C:\Users\Aula\Desktop\SistemaRH\SistemaRH\SistemaRH.Publisher\obj\Debug\net8.0\SistemaRH.Publisher.dll
+C:\Users\Aula\Desktop\SistemaRH\SistemaRH\SistemaRH.Publisher\obj\Debug\net8.0\refint\SistemaRH.Publisher.dll
+C:\Users\Aula\Desktop\SistemaRH\SistemaRH\SistemaRH.Publisher\obj\Debug\net8.0\SistemaRH.Publisher.pdb
+C:\Users\Aula\Desktop\SistemaRH\SistemaRH\SistemaRH.Publisher\obj\Debug\net8.0\SistemaRH.Publisher.genruntimeconfig.cache
+C:\Users\Aula\Desktop\SistemaRH\SistemaRH\SistemaRH.Publisher\obj\Debug\net8.0\ref\SistemaRH.Publisher.dll

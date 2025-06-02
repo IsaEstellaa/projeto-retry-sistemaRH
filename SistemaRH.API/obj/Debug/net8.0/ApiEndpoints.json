@@ -1,0 +1,331 @@
+[
+  {
+    "ContainingType": "InscricoesController",
+    "Method": "RegistrarInscricao",
+    "RelativePath": "api/inscricoes",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "inscricao",
+        "Type": "SistemaRH.Domain.Inscricao",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [],
+    "EndpointName": "Registrar_inscricao_de_candidato"
+  },
+  {
+    "ContainingType": "InscricoesController",
+    "Method": "ObterTodasInscricoes",
+    "RelativePath": "api/inscricoes",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [],
+    "EndpointName": "Obter_todas_as_inscricoes_de_candidato"
+  },
+  {
+    "ContainingType": "InscricoesController",
+    "Method": "ObterInscricaoPorId",
+    "RelativePath": "api/inscricoes/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Guid",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [],
+    "EndpointName": "Obter_inscricao_de_candidato_por_ID"
+  },
+  {
+    "ContainingType": "InscricoesController",
+    "Method": "AtualizarInscricao",
+    "RelativePath": "api/inscricoes/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Guid",
+        "IsRequired": true
+      },
+      {
+        "Name": "inscricao",
+        "Type": "SistemaRH.Domain.Inscricao",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [],
+    "EndpointName": "Atualizar_inscricao_de_candidato"
+  },
+  {
+    "ContainingType": "InscricoesController",
+    "Method": "ExcluirInscricao",
+    "RelativePath": "api/inscricoes/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Guid",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [],
+    "EndpointName": "Excluir_inscricao_de_candidato"
+  },
+  {
+    "ContainingType": "InscricoesController",
+    "Method": "VincularProcesso",
+    "RelativePath": "api/inscricoes/{inscricaoId}/processos/{processoId}",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "inscricaoId",
+        "Type": "System.Guid",
+        "IsRequired": true
+      },
+      {
+        "Name": "processoId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [],
+    "EndpointName": "Cadastrar_candidato_a_um_processo_seletivo"
+  },
+  {
+    "ContainingType": "InscricoesController",
+    "Method": "VincularVaga",
+    "RelativePath": "api/inscricoes/{inscricaoId}/vagas/{vagaId}",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "inscricaoId",
+        "Type": "System.Guid",
+        "IsRequired": true
+      },
+      {
+        "Name": "vagaId",
+        "Type": "System.Guid",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [],
+    "EndpointName": "Cadastrar_candidato_a_uma_vaga"
+  },
+  {
+    "ContainingType": "InscricoesController",
+    "Method": "SimularErroInscricao",
+    "RelativePath": "api/inscricoes/simulate-500",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [],
+    "EndpointName": "Simular_erro_na_inscricao_de_candidato"
+  },
+  {
+    "ContainingType": "ProcessosController",
+    "Method": "RegistrarProcessoSeletivo",
+    "RelativePath": "api/processos",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "processo",
+        "Type": "SistemaRH.Domain.ProcessoSeletivo",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [],
+    "EndpointName": "Registrar_processo_seletivo"
+  },
+  {
+    "ContainingType": "ProcessosController",
+    "Method": "ObterTodosProcessos",
+    "RelativePath": "api/processos",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [],
+    "EndpointName": "Obter_todos_os_processos_seletivos"
+  },
+  {
+    "ContainingType": "ProcessosController",
+    "Method": "ObterProcessoSeletivoPorId",
+    "RelativePath": "api/processos/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [],
+    "EndpointName": "Obter_processo_seletivo_por_ID"
+  },
+  {
+    "ContainingType": "ProcessosController",
+    "Method": "AtualizarProcessoSeletivo",
+    "RelativePath": "api/processos/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "processo",
+        "Type": "SistemaRH.Domain.ProcessoSeletivo",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [],
+    "EndpointName": "Atualizar_um_processo_seletivo"
+  },
+  {
+    "ContainingType": "ProcessosController",
+    "Method": "ExcluirProcessoSeletivo",
+    "RelativePath": "api/processos/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [],
+    "EndpointName": "Excluir_um_processo"
+  },
+  {
+    "ContainingType": "ProcessosController",
+    "Method": "SimulateError500",
+    "RelativePath": "api/processos/simulate-500",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [],
+    "EndpointName": "Simular_erro_no_processo_seletivo"
+  },
+  {
+    "ContainingType": "VagasController",
+    "Method": "RegistrarVaga",
+    "RelativePath": "api/vagas",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "vaga",
+        "Type": "SistemaRH.Domain.Vaga",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [],
+    "EndpointName": "Registrar_vaga_de_emprego"
+  },
+  {
+    "ContainingType": "VagasController",
+    "Method": "ObterTodasVagas",
+    "RelativePath": "api/vagas",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [],
+    "EndpointName": "Obter_todas_as_vagas"
+  },
+  {
+    "ContainingType": "VagasController",
+    "Method": "ObterVagaPorId",
+    "RelativePath": "api/vagas/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Guid",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [],
+    "EndpointName": "Obter_vaga_de_emprego_por_ID"
+  },
+  {
+    "ContainingType": "VagasController",
+    "Method": "AtualizarVaga",
+    "RelativePath": "api/vagas/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Guid",
+        "IsRequired": true
+      },
+      {
+        "Name": "vaga",
+        "Type": "SistemaRH.Domain.Vaga",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [],
+    "EndpointName": "Atualiza_a_vaga"
+  },
+  {
+    "ContainingType": "VagasController",
+    "Method": "ExcluirVaga",
+    "RelativePath": "api/vagas/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Guid",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [],
+    "EndpointName": "Exclui_uma_vaga"
+  },
+  {
+    "ContainingType": "VagasController",
+    "Method": "SimulateError500",
+    "RelativePath": "api/vagas/simulate-500",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [],
+    "EndpointName": "Simular_erro_na_vaga"
+  }
+]

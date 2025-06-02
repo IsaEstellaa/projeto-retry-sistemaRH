@@ -104,7 +104,7 @@ namespace SubscriberProcesso
                         return;
                     }
 
-                    // aguarda pelo registro da inscrição no repositório
+                    // aguarda pelo registro do processo no repositório
                     await _processoRepository.RegistrarProcessoSeletivo(processo);
                     Console.WriteLine($"[ProcessoSubscriber] Processo seletivo '{processo.Nome}' registrado com sucesso.");
                     channel.BasicAck(ea.DeliveryTag, false);

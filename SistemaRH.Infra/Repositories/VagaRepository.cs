@@ -18,13 +18,14 @@ namespace SistemaRH.Infra.Repositories
             _context = context;
         }
 
-        // Registrar a vaga de emprego
+        // registra a vaga de emprego
         public async Task RegistrarVaga(Vaga vaga)
         {
             try
             {
                 if (vaga == null) throw new ArgumentNullException(nameof(vaga));
 
+                // adiciona e salva
                 await _context.Vagas.AddAsync(vaga);
                 await _context.SaveChangesAsync();
             }
@@ -35,7 +36,7 @@ namespace SistemaRH.Infra.Repositories
             }
         }
 
-        // Obter uma vaga por ID
+        // obtem uma vaga por ID
         public async Task<Vaga?> ObterVagaPorId(Guid id)
         {
             try
@@ -46,12 +47,11 @@ namespace SistemaRH.Infra.Repositories
             }
             catch (Exception ex)
             {
-                // Log ou trate a exceção conforme necessário
                 throw new Exception("Erro ao obter vaga por ID", ex);
             }
         }
 
-        // Obter todas as vagas
+        // obtem todas as vagas
         public async Task<List<Vaga>> ObterTodasVagas()
         {
             try
@@ -61,12 +61,11 @@ namespace SistemaRH.Infra.Repositories
             }
             catch (Exception ex)
             {
-                // Log ou trate a exceção conforme necessário
                 throw new Exception("Erro ao obter todas as vagas", ex);
             }
         }
 
-        // Atualizar uma vaga
+        // atualiza uma vaga já existente
         public async Task AtualizarVaga(Vaga vaga)
         {
             try
@@ -78,12 +77,11 @@ namespace SistemaRH.Infra.Repositories
             }
             catch (Exception ex)
             {
-                // Log ou trate a exceção conforme necessário
                 throw new Exception("Erro ao atualizar vaga", ex);
             }
         }
 
-        // Excluir uma vaga
+        // exclui a vaga
         public async Task ExcluirVaga(Guid id)
         {
             try
@@ -99,7 +97,6 @@ namespace SistemaRH.Infra.Repositories
             }
             catch (Exception ex)
             {
-                // Log ou trate a exceção conforme necessário
                 throw new Exception("Erro ao excluir vaga", ex);
             }
         }
